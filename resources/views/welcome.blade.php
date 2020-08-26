@@ -4,15 +4,43 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Test</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
         <style>
-            html, body {
+
+            #Page {
+                padding: 10px;
                 background-color: #fff;
+                border-radius: 10px;
+                font-size: 13pt;
+                line-height: 2em;
+                color: #222;
+                font-family: "Comic Sans MS";
+                margin-left: auto;
+                margin-right: auto;
+                width: 80%;
+            }
+
+            #Comments{
+                padding: 10px;
+                background-color: #fff;
+                border-radius: 10px;
+                font-size: 13pt;
+                line-height: 2em;
+                color: #222;
+                font-family: "Comic Sans MS";
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 50px;
+                width: 80%;
+            }
+
+            html, body {
+                background-color: #e6e6e6;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -64,37 +92,70 @@
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
+        <div class="content title m-b-md">Test</div>
             <div class="content">
-                <div class="title m-b-md">
-                    Laravel
+                <div id="Page">
+                          <p>Заголовок!
+                            <br>
+                            1⚡ Здесь какой-то текст.
+                            <br>
+                            2⚡ И здесь какой-то текст.
+                            <br>
+                            3⚡ А здесь могла бы быть ваша реклама.
+                            <br>
+                            4⚡ Снова текст.
+                            <br>
+                            5⚡ Текст. 
+                          </p><p>Еще заголовок!
+                            <br>
+                            1⚡ Текст
+                            <br>
+                            2⚡ Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. Текст. 
+                            <br>
                 </div>
+                <div id="Comments">
+                    <form name="comment" method="post">
+                    <p>
+                    <label>Ваше имя:</label>
+                    <input type="text" name="name" />
+                    </p>
+                    <p>
+                    <label>Ваш комментарий:</label>
+                    <br />
+                    <textarea name="text_comment" cols="30" rows="50"></textarea>
+                    </p>
+                    <p>
+                    <input type="hidden" name="page_id" value="1" />
+                    <input type="submit" value="Отправить комментарий" />
+                    </p>
+                    </form>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <?php
+                        $page_id = 1;// Уникальный идентификатор страницы (статьи или поста)
+                        $mysqli = new mysqli("localhost", "root", "root", "mysql1");// Подключается к базе данных
+                        $result_set = $mysqli->query("SELECT * FROM `comments` WHERE `page_id`='$page_id'"); //Вытаскиваем все комментарии для данной страницы
+                        while ($row = $result_set->fetch_assoc()) {
+                        print_r($row); //Вывод комментариев
+
+                        echo "<br />";
+                        }
+                    ?>
+
+<?php
+        if(!isset($_GET['body'], $_GET['title']))
+        die('Пришли не все данные');
+        /* Принимаем данные из формы */
+        $name = $_POST["name"];
+        $page_id = $_POST["page_id"];
+        $text_comment = $_POST["text_comment"];
+        $name = htmlspecialchars($name);// Преобразуем спецсимволы в HTML-сущности
+        $text_comment = htmlspecialchars($text_comment);// Преобразуем спецсимволы в HTML-сущности
+        $mysqli = new mysqli("localhost", "root", "root", "mysql1");// Подключается к базе данных
+        $mysqli->query("INSERT INTO `comments` (`name`, `page_id`, `text_comment`) values ('$name', '$page_id', '$text_comment')");// Добавляем комментарий в таблицу
+        header("Location: ".$_SERVER["HTTP_REFERER"]);// Делаем редирект обратно
+        ?>
                 </div>
             </div>
-        </div>
     </body>
 </html>
